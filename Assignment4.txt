@@ -1,0 +1,17 @@
+ cd C:\Users\japes\OneDrive\Desktop\mongodb
+ mongosh
+
+
+
+show dbs
+use employees
+db.createCollection("employees")
+db.employees.insertMany([{"name":"SAM","age":22,"experience":1,"department":"MANAGER"},{"name":"HARRY","age":55,"experience":20,"department":"HR"},{"name":"TONNY","age":28,"experience":16,"department":"IT"},{"name":"RIYA","age":35,"experience":15,"department":"ENGINEER"}])
+ db.employees.find({$or:[{age:{$gt:30}},{experience:{$
+$gt:5}}]})
+
+
+
+ use products
+db.products.insertMany([{"product_name":"CHIPS","stock":100,"price":"$1000"},{"product_name":"TOFFEE","stock":20,"price":"$40"},{"product_name":"COOKIES","stock":20,"price":"$600"},{"product_name":"BISCUIT","stock":10,"price":"$300"}])
+db.products.find({stock:{$gt:0},price:{$lt:50}})

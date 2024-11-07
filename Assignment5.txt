@@ -1,0 +1,69 @@
+
+use students
+db.createCollection("students")
+db.students.insertOne({name:"Kumar", age:21, grade:"B"})
+db.students.insertOne({name:"Kum", age:18, grade:"C"})
+db.students.insertOne({name:"KumKum", age:22, grade:"A"})
+db.students.find({grade:{$ne: "A" }})
+db.students.find({grade:{$ne: "A" }}, {name:1, grade:1})
+db.students.find({age:{$lt:18}}, {name:1, age:1, grade:1})
+db.students.insertOne({name:"GOKU", age:30, experience:11, class:"A+"})
+db.students.find({experience:{$gt:10}}, {name:1, age:1, grade:1, experience:1})
+
+
+use courses
+db.createCollection("courses")
+db.courses.insertMany([{course_name:"BEE", instructor:"Sarika", duration:10},{course_name:"TEE", instructor:"Farika", duration:11},{course_name:"CEE", instructor:"Parika", duration:20}])
+db.courses.find({duration:{$gt:12}})
+db.courses.find({duration:{$gt:12}}, {course_name:1, instructor:1})
+
+use inventory
+db.createCollection("inventory")
+db.inventory.insertMany([{item_name:"Number1", price:20, stock:"yes"},{item_name:"Number2", price:25, stock:"yes"},{item_name:"Number3", price:22, stock:"no"}])
+db.inventory.find({price:{$lt:100}}, {item_name:1, price:1})
+
+
+db.students.find({name:{$in:["Alice","BOB","Charlie"]}}, {name:1, roll:1})
+
+
+
+use library
+db.createCollection("library")
+db.library.insertMany([
+  { title: "Introduction to Algorithms", author: "Thomas H. Cormen", pages: 1312 },{ title: "The Pragmatic Programmer", author: "Andrew Hunt", pages: 352 },
+  { title: "Clean Code", author: "Robert C. Martin", pages: 464 },{ title: "JavaScript: The Good Parts", author: "Douglas Crockford", pages: 176 },
+  { title: "Eloquent JavaScript", author: "Marijn Haverbeke", pages: 472 },
+  { title: "You Don’t Know JS", author: "Kyle Simpson", pages: 254 }
+])
+db.library.find({ pages: { $gt: 150, $lt: 500 } }, { title: 1, pages: 1, _id: 0 })
+
+
+use library
+db.employees.insertMany([
+  { employee_id: 1, name: "Alice Johnson", department: "Engineering", experience: 12, salary: 75000 },
+  { employee_id: 2, name: "Bob Smith", department: "HR", experience: 8, salary: 65000 },
+  { employee_id: 3, name: "Charlie Brown", department: "Marketing", experience: 15, salary: 82000 },
+  { employee_id: 4, name: "David Wilson", department: "Sales", experience: 5, salary: 55000 },
+  { employee_id: 5, name: "Evelyn Black", department: "Finance", experience: 11, salary: 92000 }
+])
+db.employees.find({ department: { $ne: "HR" }, salary: { $gt: 60000 } }, { name: 1, salary: 1, _id: 0 })
+
+
+
+use orders
+db.orders.insertMany([
+  { order_id: 101, status: "completed", total_amount: 250 },
+  { order_id: 102, status: "in progress", total_amount: 100 },
+  { order_id: 103, status: "pending", total_amount: 150 },
+  { order_id: 104, status: "completed", total_amount: 300 },
+  { order_id: 105, status: "cancelled", total_amount: 50 }
+])
+db.orders.find({ status: { $in: ["completed", "in progress"] } }, { order_id: 1, total_amount: 1 })
+
+
+use students
+db.students.find(
+    { roll: { $gte: 500 }, department: { $in: ["Biology", "Chemistry", "Physics"] } },
+    { name: 1, roll: 1, department: 1, _id: 0 }
+)
+
