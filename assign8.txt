@@ -1,0 +1,71 @@
+//1
+use university
+db.createCollection("students")
+db.students.insertMany([{ _id: 1, name: "Diljot", course_id: 101 }, { _id: 2, name: "Diya", course_id: 102 }, { _id: 3, name: "garima", course_id: 103 }, { _id: 4, name: "geetika", course_id: 101 }, { _id: 5, name: "gopika", course_id: 104 }]);
+db.createCollection("courses")
+db.courses.insertMany([{ _id: 101, course_name: "Maths" }, { _id: 102, course_name: "Science" }, { _id: 103, course_name: "History" }, { _id: 104, course_name: "Art" }]);
+db.students.aggregate([{ $lookup: { from: "courses", localField: "course_id", foreignField: "_id", as: "course_info" } }, { $project: { name: 1, "course_info.course_name": 1 }}]);
+
+
+
+//2
+db.students.aggregate([{ $match: { scores: { $gt: 75 } }}]);
+
+
+//3
+db.createCollection("orders")
+db.orders.insertMany([{ customerId: 1, amount: 600 }, { customerId: 2, amount: 450 }, { customerId: 3, amount: 700 }]);
+db.createCollection("customers")
+db.customers.insertMany([{ _id: 1, location: "New York", membership: "standard" }, { _id: 2, location: "Los Angeles", membership: "premium" }, { _id: 3, location: "New York", membership: "basic" }]);
+db.orders.aggregate([{ $match: { amount: { $gt: 500 }}}, { $lookup: { from: "customers", localField: "customerId", foreignField: "_id", as: "customer_info" }}, { $match: { "customer_info.location": "New York" }}]);
+
+
+
+//4
+db.createCollection("sales");
+db.sales.insertMany([{ productId: 1, quantity: 10, date: "2024-11-01" }, { productId: 2, quantity: 5, date: "2024-11-02" }, { productId: 3, quantity: 20, date: "2024-11-03" }]);
+db.createCollection("products1");
+db.products1.insertMany([{ _id: 1, price: 25 }, { _id: 2, price: 15 }, { _id: 3, price: 30 }]);
+db.sales.aggregate([{ $lookup: { from: "products1", localField: "productId", foreignField: "_id", as: "product_info" } }, { $unwind: "$product_info" }, { $match: { "product_info.price": { $gt: 20 } } }, { $group: { _id: "$productId", totalRevenue: { $sum: { $multiply: ["$quantity", "$product_info.price"] } } } }]);
+
+
+
+//5
+db.createCollection("employees")
+db.employees.insertMany([{ name: "Arjun", department: "HR" }, { name: "Divya", department: "Engineering" }, { name: "Ishita", department: "Marketing" }, { name: "Amit", department: "Sales" }]);
+db.employees.aggregate([{ $match: { department: { $in: ["HR", "Engineering", "Marketing"] }}}]);
+
+
+//6
+db.createCollection("transactions")
+db.transactions.insertMany([{ amount: 500, type: "credit" }, { amount: 1200, type: "debit" }, { amount: 800, type: "credit" }]);
+db.transactions.aggregate([{ $match: { $or: [{ type: "credit" }, { amount: { $gt: 1000 }}] }}]);
+
+
+//7
+db.createCollection("products")
+db.products.insertMany([{ category: "electronics", price: 450, stock: 15, name: "cold cream" }, { category: "electronics", price: 150, stock: 8, name: "phone" }, { category: "grocery", price: 50, stock: 30, name: "dal" }, { category: "grocery", price: 100, stock: 20, name: "rice"}])
+db.orders.aggregate([{ $lookup: { from: "customers", localField: "customerId", foreignField: "_id", as: "customer_info" }},{ $match: { "customer_info.membership": { $ne: "premium" }}}]);
+
+
+
+
+//8
+db.createCollection("instructors")
+db.instructors.insertMany([{ _id: 1, name: "mr. Kumar" }, { _id: 2, name: "mr. Gupta" }, { _id: 3, name: "mr. Singh" }]);
+db.students.aggregate([{ $lookup: { from: "courses", localField: "course_id", foreignField: "_id", as: "course_info" }},{ $lookup: { from: "instructors", localField: "course_info.instructorId", foreignField: "_id", as: "instructor_info" }},{ $unwind: "$instructor_info" },{ $project: { name: 1, "course_info.course_name": 1, "instructor_info.name": 1 }}]);
+
+
+
+//9
+db.createCollection("purchases")
+db.purchases.insertMany([{ customerId: 1, total: 200 }, { customerId: 2, total: 300 }, { customerId: 3, total: 100 }]);
+db.purchases.aggregate([{ $lookup: { from: "customers", localField: "customerId", foreignField: "_id", as: "customer_info" }},{ $match: { "customer_info.loyaltyPoints": { $gte: 1000 }}}]);
+
+
+
+
+//10
+db.products.aggregate([{ $match: { category: "electronics", price: { $lt: 500 }, stock: { $gt: 10 }}}]);
+
+
