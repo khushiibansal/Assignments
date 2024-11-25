@@ -1,0 +1,29 @@
+1. Filter Products by Price Range and Stock
+db.products.find({ price: { $gte: 20, $lte: 100 }, stock: { $gt: 0 } });
+
+2. Qualified Students for Scholarship
+db.students.find({ $or: [{ grade: { $gt: 85 } }, { attendance: { $gt: 90 } }, { age: { $lt: 18 } }] });
+
+3. Filter Jobs by Salary and Location
+db.jobs.find({ salary: { $gt: 50000 }, location: { $in: ["New York", "San Francisco"] } });
+
+4. Available Electronics with Discount
+db.inventory.find({ category: "electronics", discount: { $gte: 10 }, stock: { $gt: 0 } });
+
+5. Identify Pending Orders for VIP Customers
+db.orders.find({ status: "pending", $or: [{ customer_type: "VIP" }, { amount: { $gt: 500 } }] });
+
+6. Find Students Exceeding Both Age and Grade Limits
+db.students.find({ $or: [{ age: { $gt: 18 }, grade: { $lt: 60 } }, { attendance: { $lt: 75 } }] });
+
+7. Special Offers on Furniture
+db.products.find({ category: "furniture", $or: [{ price: { $lt: 200 } }, { stock: { $lt: 5 } }] });
+
+8. Available Software and Services
+db.items.find({ type: { $in: ["software", "service"] }, price: { $lt: 100 } });
+
+9. Filter Employees by Experience or Department
+db.employees.find({ experience: { $gt: 5 }, department: { $in: ["Engineering", "HR"] } });
+
+10. Urgent Orders for High-Value Products
+db.orders.find({ $or: [{ status: "urgent", total_amount: { $gt: 1000 } }, { priority: "high" }] });

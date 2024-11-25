@@ -1,0 +1,147 @@
+1. Find Orders Above a Certain Amount with a Specific Status
+db.orders.find({
+    orderTotal: { $gt: 100 },
+    orderStatus: "shipped"
+})
+
+
+
+2. Total Quantity of Products Sold by Category
+db.sales.aggregate([
+    {
+        $group: {
+            _id: "$category",
+            totalQuantity: { $sum: "$quantity" }
+        }
+    }
+])
+
+
+3. Join User Details with Orders Using $lookup
+db.users.aggregate([
+    {
+        $lookup: {
+            from: "orders",
+            localField: "userId",
+            foreignField: "userId",
+            as: "userOrders"
+        }
+    }
+])
+
+
+
+4. Calculate Total Amount Spent Per Customer
+db.transactions.aggregate([
+    {
+        $group: {
+            _id: "$customerId",
+            totalSpent: { $sum: "$amount" }
+        }
+    }
+])
+
+
+
+5. Total Revenue Generated in 2023
+db.orders.aggregate([
+    {
+        $match: { year: 2023 }
+    },
+    {
+        $group: {
+            _id: null,
+            totalRevenue: { $sum: "$orderTotal" }
+        }
+    }
+])
+
+
+
+6. Join Employees with Departments and Filter by Specific Department
+db.employees.aggregate([
+    {
+        $lookup: {
+            from: "departments",
+            localField: "departmentId",
+            foreignField: "departmentId",
+            as: "departmentInfo"
+        }
+    },
+    {
+        $unwind: "$departmentInfo"
+    },
+    {
+        $match: { "departmentInfo.name": "Sales" }
+    }
+])
+
+
+
+7. Calculate Total Sales for Each Category-Brand Combination
+db.products.aggregate([
+    {
+        $group: {
+            _id: { category: "$category", brand: "$brand" },
+            totalSales: { $sum: "$sales" }
+        }
+    }
+])
+
+
+
+8. Count How Many Times Each Book Has Been Borrowed
+db.books.aggregate([
+    {
+        $lookup: {
+            from: "borrowRecords",
+            localField: "bookId",
+            foreignField: "bookId",
+            as: "borrowDetails"
+        }
+    },
+    {
+        $addFields: {
+            borrowCount: { $size: "$borrowDetails" }
+        }
+    },
+    {
+        $project: {
+            _id: 0,
+            bookId: 1,
+            title: 1,
+            borrowCount: 1
+        }
+    }
+])
+
+
+
+9. Calculate Revenue from VIP Customers
+db.orders.aggregate([
+    {
+        $match: { membershipTier: "VIP" }
+    },
+    {
+        $group: {
+            _id: null,
+            vipRevenue: { $sum: "$orderTotal" }
+        }
+    }
+])
+
+
+
+10. Calculate Average Product Rating
+db.reviews.aggregate([
+    {
+        $group: {
+            _id: "$productId",
+            averageRating: { $avg: "$rating" }
+        }
+    }
+])
+
+
+
+
